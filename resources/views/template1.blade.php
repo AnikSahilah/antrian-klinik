@@ -279,55 +279,6 @@
     </section>
     <!-- ========================= pricing style-4 end ========================= -->
 
-    <!-- ========================= Daftar Antrian ========================= -->
-    <section id="Daftar" class="pricing-section pricing-style-4 bg-light py-5">
-        <div class="container">
-            <h2 class="text-center mb-5 fw-bold">📝 Pendaftaran Antrian</h2>
-
-            @if(session('success'))
-            <div class="alert alert-success text-center">{{ session('success') }}</div>
-            @endif
-
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <form action="{{ route('landing.storeAntrian') }}" method="POST" class="card p-4 shadow border-0 rounded-4 bg-white">
-                        @csrf
-
-                        <div class="mb-4">
-                            <label for="nomor_antrian" class="form-label fw-semibold">🆔 Nomor Antrian</label>
-                            <input type="text" readonly class="form-control bg-light border-0 fw-bold" id="nomor_antrian" name="nomor_antrian" value="{{ $nextNomorFormatted }}">
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="nama" class="form-label fw-semibold">👤 Nama Lengkap</label>
-                            <input type="text" class="form-control" id="nama" name="nama" required placeholder="Masukkan nama lengkap Anda">
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="keluhan" class="form-label fw-semibold">💬 Keluhan</label>
-                            <textarea class="form-control" id="keluhan" name="keluhan" rows="3" required placeholder="Tuliskan keluhan Anda..."></textarea>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="waktu_periksa" class="form-label fw-semibold">⏰ Waktu Periksa</label>
-                            <select class="form-select" id="waktu_periksa" name="waktu_periksa" required>
-                                <option selected disabled>-- Pilih Waktu --</option>
-                                <option value="pagi">Pagi</option>
-                                <option value="sore">Sore</option>
-                            </select>
-                        </div>
-
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold">
-                                ✅ Daftar Sekarang
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- ========================= Daftar Antrian Hari Ini ========================= -->
     <section id="ListAntrian" class="py-5 bg-white">
         <div class="container">
@@ -404,7 +355,7 @@
     <!-- ========================= Daftar Antrian ========================= -->
 
     <!-- ========================= contact-style-3 start ========================= -->
-    <section id="Contact" class="contact-section contact-style-3">
+    <section id="contact" class="contact-section contact-style-3">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xxl-5 col-xl-5 col-lg-7 col-md-10">
