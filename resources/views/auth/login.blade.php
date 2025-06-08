@@ -22,7 +22,7 @@
 <body class="bg-gradient-to-b from-[#e0e7ff] to-[#1e3a8a] min-h-screen flex items-center justify-center p-6 font-roboto text-[#1e3a8a]">
 
     <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8 border border-[#e0e7ff]">
-        <h2 class="text-3xl font-bold mb-6 text-center">Login ke RentalMobil</h2>
+        <h2 class="text-3xl font-bold mb-6 text-center">Login ke Halaman Admin</h2>
 
         <!-- Session Status -->
         @if (session('status'))
