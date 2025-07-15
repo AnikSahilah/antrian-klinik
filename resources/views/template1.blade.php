@@ -230,7 +230,7 @@
     <!-- ========================= Daftar style-4 start ========================= -->
     <section id="Daftar" class="pricing-section pricing-style-4 bg-light py-5">
         <div class="container">
-            <h2 class="text-center mb-5 fw-bold">📝 Pendaftaran Antrian</h2>
+            <h4 class="text-center mb-5 fw-bold">Pendaftaran Antrian</h4>
 
             @if(session('success'))
             <div class="alert alert-success text-center">{{ session('success') }}</div>
@@ -282,7 +282,7 @@
     <!-- ========================= Daftar Antrian Hari Ini ========================= -->
     <section id="ListAntrian" class="py-5 bg-white">
         <div class="container">
-            <h2 class="text-center mb-4 fw-bold">📋 Daftar Antrian Hari Ini</h2>
+            <h4 class="text-center mb-4 fw-bold">Daftar Antrian Hari Ini</h4>
 
             <!-- Filter sesi -->
             <form method="GET" action="{{ route('landing.index') }}" class="mb-4 text-end">
