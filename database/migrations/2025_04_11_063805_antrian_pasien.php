@@ -6,25 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('antrian_pasien', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('jadwal_id'); // Relasi ke jadwal_antrian
+            $table->enum('sesi', ['pagi', 'sore']);  // 🆕 Tambahkan kolom sesi
             $table->string('nomor_antrian');
             $table->string('nama');
             $table->text('keluhan');
-            $table->string('hari_periksa');
-            $table->enum('waktu_periksa', ['pagi', 'sore']);
+            $table->enum('status', ['menunggu', 'diperiksa', 'selesai'])->default('menunggu');
+            $table->text('hasil_pemeriksaan')->nullable();
+            $table->text('resep_obat')->nullable();
             $table->timestamps();
+
+            $table->foreign('jadwal_id')->references('id')->on('jadwal_antrian')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('antrian_pasien');

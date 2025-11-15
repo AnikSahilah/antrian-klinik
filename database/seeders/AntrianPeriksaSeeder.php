@@ -2,18 +2,15 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Models\Jadwal_Periksa_Models;
 
 class AntrianPeriksaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
         $waktus = ['pagi', 'sore'];
 
         $namaIndonesia = [
@@ -52,23 +49,50 @@ class AntrianPeriksaSeeder extends Seeder
             'Diare'
         ];
 
+        $hasilPemeriksaanList = [
+            'Infeksi saluran pernapasan ringan',
+            'Gejala tifus awal',
+            'Dehidrasi ringan',
+            'Gangguan pencernaan',
+            'Observasi demam dengue'
+        ];
+
+        $resepObatList = [
+            'Paracetamol, Vitamin C',
+            'Antasida, Oralit',
+            'Amoxicillin, Ibuprofen',
+            'Loperamide, Zinc',
+            'Salbutamol, Ambroxol'
+        ];
+
+        $today = Carbon::now()->startOfDay();
         $data = [];
 
-        foreach ($hari as $h) {
+        $jadwals = Jadwal_Periksa_Models::all();
+
+        foreach ($jadwals as $jadwal) {
+            $tanggal = Carbon::parse($jadwal->tanggal);
+            $status = $tanggal->lt($today) ? 'selesai' : 'menunggu';
+
             foreach ($waktus as $waktu) {
-                // Reset counter tiap hari & waktu
-                $counter = 1;
-                for ($i = 0; $i < 5; $i++) {
+                $statusSesi = $waktu === 'pagi' ? $jadwal->status_pagi : $jadwal->status_sore;
+                if ($statusSesi !== 'buka') {
+                    continue;
+                }
+
+                for ($i = 1; $i <= 5; $i++) {
                     $data[] = [
-                        'nomor_antrian' => str_pad($counter, 3, '0', STR_PAD_LEFT),
-                        'nama' => $namaIndonesia[array_rand($namaIndonesia)],
-                        'keluhan' => $keluhan[array_rand($keluhan)],
-                        'hari_periksa' => $h,
-                        'waktu_periksa' => $waktu,
-                        'created_at' => now(),
-                        'updated_at' => now(),
+                        'jadwal_id'         => $jadwal->id,
+                        'sesi'              => $waktu,
+                        'nomor_antrian'     => str_pad($i, 3, '0', STR_PAD_LEFT),
+                        'nama'              => $namaIndonesia[array_rand($namaIndonesia)],
+                        'keluhan'           => $keluhan[array_rand($keluhan)],
+                        'status'            => $status,
+                        'hasil_pemeriksaan' => $status === 'selesai' ? $hasilPemeriksaanList[array_rand($hasilPemeriksaanList)] : null,
+                        'resep_obat'        => $status === 'selesai' ? $resepObatList[array_rand($resepObatList)] : null,
+                        'created_at'        => now(),
+                        'updated_at'        => now(),
                     ];
-                    $counter++;
                 }
             }
         }

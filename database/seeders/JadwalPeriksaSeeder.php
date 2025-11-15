@@ -2,60 +2,36 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class JadwalPeriksaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
     {
-        DB::table('jadwal_antrian')->insert([
-            [
-                'hari' => 'Senin',
-                'jam_buka_pagi' => '08:00:00',
-                'jam_buka_sore' => '16:00:00',
-                'status' => 'buka',
-            ],
-            [
-                'hari' => 'Selasa',
-                'jam_buka_pagi' => '08:00:00',
-                'jam_buka_sore' => '16:00:00',
-                'status' => 'buka',
-            ],
-            [
-                'hari' => 'Rabu',
-                'jam_buka_pagi' => '08:00:00',
-                'jam_buka_sore' => '16:00:00',
-                'status' => 'buka',
-            ],
-            [
-                'hari' => 'Kamis',
-                'jam_buka_pagi' => '08:00:00',
-                'jam_buka_sore' => '16:00:00',
-                'status' => 'buka',
-            ],
-            [
-                'hari' => 'Jumat',
-                'jam_buka_pagi' => '08:00:00',
-                'jam_buka_sore' => '16:00:00',
-                'status' => 'buka',
-            ],
-            [
-                'hari' => 'Sabtu',
-                'jam_buka_pagi' => '08:00:00',
-                'jam_buka_sore' => '12:00:00',
-                'status' => 'buka',
-            ],
-            [
-                'hari' => 'Minggu',
-                'jam_buka_pagi' => '09:00:00',
-                'jam_buka_sore' => '12:00:00',
-                'status' => 'tutup',
-            ]
-        ]);
+        $start = Carbon::create(2025, 7, 1);
+        $end = Carbon::create(2025, 8, 31);
+        $data = [];
+
+        for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
+            $isWeekend = $date->isWeekend();
+
+            $data[] = [
+                'tanggal' => $date->toDateString(),
+                'jam_buka_pagi' => $isWeekend ? null : '08:00:00',
+                'jam_tutup_pagi' => $isWeekend ? null : '10:00:00',
+                'status_pagi' => $isWeekend ? 'tutup' : 'buka',
+
+                'jam_buka_sore' => $isWeekend ? null : '14:00:00',
+                'jam_tutup_sore' => $isWeekend ? null : '17:00:00',
+                'status_sore' => $isWeekend ? 'tutup' : 'buka',
+
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        DB::table('jadwal_antrian')->insert($data);
     }
 }

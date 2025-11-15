@@ -27,21 +27,59 @@
     <div class="overflow-x-auto">
         <table class="w-full table-auto border-collapse text-sm text-gray-700">
             <thead>
-                <tr class="bg-gray-50">
-                    <th class="border-b border-gray-200 px-4 py-2 text-left font-medium text-gray-600">Hari</th>
-                    <th class="border-b border-gray-200 px-4 py-2 text-left font-medium text-gray-600">Jam Buka Pagi</th>
-                    <th class="border-b border-gray-200 px-4 py-2 text-left font-medium text-gray-600">Jam Buka Sore</th>
-                    <th class="border-b border-gray-200 px-4 py-2 text-left font-medium text-gray-600">Status</th>
-                    <th class="border-b border-gray-200 px-4 py-2 text-left font-medium text-gray-600">Aksi</th>
+                <tr class="bg-gray-50 text-left">
+                    <th class="border-b border-gray-200 px-4 py-2">Tanggal</th>
+                    <th class="border-b border-gray-200 px-4 py-2">Jam Buka Pagi</th>
+                    <th class="border-b border-gray-200 px-4 py-2">Jam Tutup Pagi</th>
+                    <th class="border-b border-gray-200 px-4 py-2">Status Pagi</th>
+                    <th class="border-b border-gray-200 px-4 py-2">Jam Buka Sore</th>
+                    <th class="border-b border-gray-200 px-4 py-2">Jam Tutup Sore</th>
+                    <th class="border-b border-gray-200 px-4 py-2">Status Sore</th>
+                    <th class="border-b border-gray-200 px-4 py-2">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($jadwals as $jadwal)
                 <tr class="hover:bg-gray-50 transition-colors duration-150">
-                    <td class="border-b border-gray-100 px-4 py-3 capitalize">{{ $jadwal->hari }}</td>
-                    <td class="border-b border-gray-100 px-4 py-3">{{ $jadwal->jam_buka_pagi }}</td>
-                    <td class="border-b border-gray-100 px-4 py-3">{{ $jadwal->jam_buka_sore }}</td>
-                    <td class="border-b border-gray-100 px-4 py-3 capitalize">{{ $jadwal->status }}</td>
+                    <td class="border-b border-gray-100 px-4 py-3">
+                        {{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d-m-Y') }}
+                    </td>
+
+                    <!-- Jam Buka Pagi -->
+                    <td class="border-b border-gray-100 px-4 py-3">
+                        {{ \Carbon\Carbon::parse($jadwal->jam_buka_pagi)->format('H:i') }}
+                    </td>
+
+                    <!-- Jam Tutup Pagi -->
+                    <td class="border-b border-gray-100 px-4 py-3">
+                        {{ \Carbon\Carbon::parse($jadwal->jam_tutup_pagi)->format('H:i') }}
+                    </td>
+
+                    <!-- Status Pagi -->
+                    <td class="border-b border-gray-100 px-4 py-3 capitalize">
+                        <span class="{{ $jadwal->status_pagi == 'buka' ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $jadwal->status_pagi }}
+                        </span>
+                    </td>
+
+                    <!-- Jam Buka Sore -->
+                    <td class="border-b border-gray-100 px-4 py-3">
+                        {{ \Carbon\Carbon::parse($jadwal->jam_buka_sore)->format('H:i') }}
+                    </td>
+
+                    <!-- Jam Tutup Sore -->
+                    <td class="border-b border-gray-100 px-4 py-3">
+                        {{ \Carbon\Carbon::parse($jadwal->jam_tutup_sore)->format('H:i') }}
+                    </td>
+
+                    <!-- Status Sore -->
+                    <td class="border-b border-gray-100 px-4 py-3 capitalize">
+                        <span class="{{ $jadwal->status_sore == 'buka' ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $jadwal->status_sore }}
+                        </span>
+                    </td>
+
+                    <!-- Aksi -->
                     <td class="border-b border-gray-100 px-4 py-3 flex space-x-4">
                         <!-- Edit -->
                         <a href="{{ route('jadwal.edit', $jadwal->id) }}"
@@ -71,11 +109,16 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center py-6 text-gray-400 italic">Belum ada jadwal antrian.</td>
+                    <td colspan="8" class="text-center py-6 text-gray-400 italic">Belum ada jadwal antrian.</td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-4">
+        {{ $jadwals->links() }}
     </div>
 </div>
 @endsection

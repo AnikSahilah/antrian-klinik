@@ -129,57 +129,71 @@
     </section>
     <!-- ========================= hero-section-wrapper-6 end ========================= -->
 
-    <!-- ========================= Jadwal style-5 start ========================= -->
-    <section id="Jadwal" class="py-20 bg-gray-50">
-        <div class="container py-6">
-            <div class="text-center mb-5">
-                <h3 class="fw-bold display-5 text-primary">Jadwal Praktek</h3>
-                <p class="text-secondary fs-5 mx-auto" style="max-width: 600px;">
-                    Di bawah ini merupakan jadwal dari klinik kami, sebagai acuan untuk kunjungan Anda.
+    <!-- ========================= Jadwal Praktek ========================= -->
+    <section id="Jadwal" class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold text-primary">Jadwal Praktek Hari Ini</h3>
+                <p class="text-secondary fs-5">
+                    {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('l, d F Y') }}
                 </p>
             </div>
 
-            <div class="table-responsive shadow-sm rounded-4 overflow-hidden">
-                <table class="table table-hover align-middle mb-0 bg-white">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th scope="col" class="py-3 fs-5">Hari</th>
-                            <th scope="col" class="py-3 fs-5">Jam Pagi</th>
-                            <th scope="col" class="py-3 fs-5">Jam Sore</th>
-                            <th scope="col" class="py-3 fs-5">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($jadwals as $jadwal)
-                        <tr class="align-middle">
-                            <td class="text-capitalize fw-semibold fs-6 py-3">{{ $jadwal->hari }}</td>
-                            <td class="fs-6 py-3">{{ $jadwal->jam_buka_pagi }}</td>
-                            <td class="fs-6 py-3">{{ $jadwal->jam_buka_sore }}</td>
-                            <td class="py-3">
-                                @if($jadwal->status == 'buka')
-                                <span class="badge rounded-pill bg-success fs-6 px-3 py-2 text-white shadow-sm">
-                                    {{ ucfirst($jadwal->status) }}
-                                </span>
+            @if($jadwal)
+            <div class="card shadow-lg rounded-4 mx-auto" style="max-width: 800px;">
+                <div class="row g-0">
+                    <!-- Sesi Pagi -->
+                    <div class="col-md-6 border-end">
+                        <div class="card-body text-center p-4">
+                            <div class="fs-1 mb-2">🌅</div>
+                            <h5 class="card-title text-primary">Sesi Pagi</h5>
+                            <p class="card-text mb-1">
+                                <strong>Jam:</strong><br>
+                                {{ $jadwal->jam_buka_pagi ? \Carbon\Carbon::parse($jadwal->jam_buka_pagi)->format('H:i') : '-' }}
+                                -
+                                {{ $jadwal->jam_tutup_pagi ? \Carbon\Carbon::parse($jadwal->jam_tutup_pagi)->format('H:i') : '-' }}
+                            </p>
+                            <p class="mt-3">
+                                @if($jadwal->status_pagi === 'buka')
+                                <span class="badge bg-success px-3 py-2 fs-6 shadow">Buka</span>
                                 @else
-                                <span class="badge rounded-pill bg-danger fs-6 px-3 py-2 text-white shadow-sm">
-                                    {{ ucfirst($jadwal->status) }}
-                                </span>
+                                <span class="badge bg-danger px-3 py-2 fs-6 shadow">Tutup</span>
                                 @endif
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="4" class="text-center fst-italic text-muted py-5 fs-6">
-                                Belum ada jadwal antrian.
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Sesi Sore -->
+                    <div class="col-md-6">
+                        <div class="card-body text-center p-4">
+                            <div class="fs-1 mb-2">🌇</div>
+                            <h5 class="card-title text-primary">Sesi Sore</h5>
+                            <p class="card-text mb-1">
+                                <strong>Jam:</strong><br>
+                                {{ $jadwal->jam_buka_sore ? \Carbon\Carbon::parse($jadwal->jam_buka_sore)->format('H:i') : '-' }}
+                                -
+                                {{ $jadwal->jam_tutup_sore ? \Carbon\Carbon::parse($jadwal->jam_tutup_sore)->format('H:i') : '-' }}
+                            </p>
+                            <p class="mt-3">
+                                @if($jadwal->status_sore === 'buka')
+                                <span class="badge bg-success px-3 py-2 fs-6 shadow">Buka</span>
+                                @else
+                                <span class="badge bg-danger px-3 py-2 fs-6 shadow">Tutup</span>
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
+            @else
+            <div class="text-center mt-5">
+                <p class="text-muted fst-italic fs-5">Tidak ada jadwal praktek untuk hari ini.</p>
+            </div>
+            @endif
         </div>
     </section>
-    <!-- ========================= Jadwal style-5 end ========================= -->
+    <!-- ========================= Jadwal Praktek End ========================= -->
+
     <!-- ========================= feature style-5 end ========================= -->
 
     <!-- ========================= about style-4 start ========================= -->
@@ -227,24 +241,24 @@
     </section>
     <!-- ========================= about style-4 end ========================= -->
 
-    <!-- ========================= Daftar style-4 start ========================= -->
+    <!-- ========================= Pendaftaran Antrian ========================= -->
     <section id="Daftar" class="pricing-section pricing-style-4 bg-light py-5">
         <div class="container">
             <h4 class="text-center mb-5 fw-bold">Pendaftaran Antrian</h4>
 
             @if(session('success'))
             <div class="alert alert-success text-center">{{ session('success') }}</div>
+            @elseif(session('error'))
+            <div class="alert alert-danger text-center">{{ session('error') }}</div>
             @endif
 
             <div class="row justify-content-center">
                 <div class="col-md-8">
+                    @if($isBuka)
                     <form action="{{ route('landing.storeAntrian') }}" method="POST" class="card p-4 shadow border-0 rounded-4 bg-white">
                         @csrf
 
-                        <div class="mb-4">
-                            <label for="nomor_antrian" class="form-label fw-semibold">🆔 Nomor Antrian</label>
-                            <input type="text" readonly class="form-control bg-light border-0 fw-bold" id="nomor_antrian" name="nomor_antrian" value="{{ $nextNomorFormatted }}">
-                        </div>
+                        <input type="hidden" name="sesi" value="{{ $sesi }}">
 
                         <div class="mb-4">
                             <label for="nama" class="form-label fw-semibold">👤 Nama Lengkap</label>
@@ -256,58 +270,46 @@
                             <textarea class="form-control" id="keluhan" name="keluhan" rows="3" required placeholder="Tuliskan keluhan Anda..."></textarea>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <label for="waktu_periksa" class="form-label fw-semibold">⏰ Waktu Periksa</label>
-                                <select class="form-select" id="waktu_periksa" name="waktu_periksa" required>
-                                    <option selected disabled>-- Pilih Waktu --</option>
-                                    <option value="pagi">Pagi</option>
-                                    <option value="sore">Sore</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold">
                                 ✅ Daftar Sekarang
                             </button>
                         </div>
                     </form>
+                    @else
+                    <div class="alert alert-warning text-center">
+                        Pendaftaran sesi <strong>{{ ucfirst($sesi) }}</strong> sedang <strong>tutup</strong> atau di luar jam buka. Silakan coba lagi nanti.
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
     </section>
-    <!-- ========================= pricing style-4 end ========================= -->
 
     <!-- ========================= Daftar Antrian Hari Ini ========================= -->
     <section id="ListAntrian" class="py-5 bg-white">
         <div class="container">
-            <h4 class="text-center mb-4 fw-bold">Daftar Antrian Hari Ini</h4>
+            <h4 class="text-center mb-4 fw-bold">
+                Daftar Antrian {{ \Carbon\Carbon::parse($tanggal)->locale('id')->translatedFormat('l, d F Y') }}
+            </h4>
 
-            <!-- Filter sesi -->
             <form method="GET" action="{{ route('landing.index') }}" class="mb-4 text-end">
                 <div class="row g-2 justify-content-end align-items-center">
                     <div class="col-auto">
                         <select name="sesi" class="form-select" onchange="this.form.submit()">
-                            <option value="">🔍 Semua Sesi</option>
-                            <option value="pagi" {{ request('sesi') == 'pagi' ? 'selected' : '' }}>🌅 Sesi Pagi</option>
-                            <option value="sore" {{ request('sesi') == 'sore' ? 'selected' : '' }}>🌇 Sesi Sore</option>
+                            <option value="pagi" {{ $sesi == 'pagi' ? 'selected' : '' }}>🌅 Sesi Pagi</option>
+                            <option value="sore" {{ $sesi == 'sore' ? 'selected' : '' }}>🌇 Sesi Sore</option>
                         </select>
                     </div>
                 </div>
             </form>
 
             <h5 class="text-center mb-3">
-                Menampilkan antrian hari ini
-                @if($selectedSesi)
-                untuk sesi <strong>{{ ucfirst($selectedSesi) }}</strong>
-                @else
-                untuk semua sesi
-                @endif
+                Menampilkan antrian sesi <strong>{{ ucfirst($sesi) }}</strong>
             </h5>
 
             @if($antrians->isEmpty())
-            <div class="alert alert-info text-center">Belum ada antrian hari ini.</div>
+            <div class="alert alert-info text-center">Belum ada antrian untuk sesi ini.</div>
             @else
             <div class="table-responsive">
                 <table class="table table-hover align-middle text-center shadow-sm rounded-4 overflow-hidden">
@@ -316,10 +318,7 @@
                             <th>#</th>
                             <th>Nomor</th>
                             <th>Nama</th>
-                            <th>Keluhan</th>
-                            <th>Hari</th>
-                            <th>Waktu</th>
-                            <th>Daftar</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody class="fw-medium">
@@ -332,17 +331,14 @@
                                 </span>
                             </td>
                             <td class="text-start">{{ $antrian->nama }}</td>
-                            <td class="text-start">{{ $antrian->keluhan }}</td>
-                            <td>{{ ucfirst($antrian->hari_periksa) }}</td>
                             <td>
-                                @if($antrian->waktu_periksa === 'pagi')
-                                <span class="badge bg-success-subtle text-success px-2">🌅 Pagi</span>
+                                @if($antrian->status == 'menunggu')
+                                <span class="badge bg-warning text-dark">Menunggu</span>
+                                @elseif($antrian->status == 'diperiksa')
+                                <span class="badge bg-info text-white">Diperiksa</span>
                                 @else
-                                <span class="badge bg-primary-subtle text-primary px-2">🌇 Sore</span>
+                                <span class="badge bg-success text-white">Selesai</span>
                                 @endif
-                            </td>
-                            <td class="text-muted small">
-                                {{ \Carbon\Carbon::parse($antrian->created_at)->format('d-m-Y H:i') }}
                             </td>
                         </tr>
                         @endforeach
@@ -352,7 +348,6 @@
             @endif
         </div>
     </section>
-    <!-- ========================= Daftar Antrian ========================= -->
 
     <!-- ========================= contact-style-3 start ========================= -->
     <section id="contact" class="contact-section contact-style-3">
